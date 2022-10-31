@@ -11,6 +11,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -21,33 +23,44 @@ import javax.persistence.Table;
  * @author Carlos Rafaelano
  */
 @Entity
-@Table(name = "libroDiario")
+@Table(name = "libro_diario")
 @NamedQueries({
     @NamedQuery(name = "LibroDiario.findAll", query = "SELECT l FROM LibroDiario l"),
-    @NamedQuery(name = "LibroDiario.findByIdlibrodiario", query = "SELECT l FROM LibroDiario l WHERE l.idlibrodiario = :idlibrodiario")})
+    @NamedQuery(name = "LibroDiario.findByIdLibroDiario", query = "SELECT l FROM LibroDiario l WHERE l.idLibroDiario = :idLibroDiario")})
 public class LibroDiario implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @Column(name = "idlibrodiario")
-    private Integer idlibrodiario;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idlibrodiario")
+    @Column(name = "id_libro_diario")
+    private Integer idLibroDiario;
+    @JoinColumn(name = "id_partida", referencedColumnName = "id_partida")
+    @ManyToOne
+    private Partida idPartida;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idLibroDiario")
     private Collection<Partida> partidaCollection;
 
     public LibroDiario() {
     }
 
-    public LibroDiario(Integer idlibrodiario) {
-        this.idlibrodiario = idlibrodiario;
+    public LibroDiario(Integer idLibroDiario) {
+        this.idLibroDiario = idLibroDiario;
     }
 
-    public Integer getIdlibrodiario() {
-        return idlibrodiario;
+    public Integer getIdLibroDiario() {
+        return idLibroDiario;
     }
 
-    public void setIdlibrodiario(Integer idlibrodiario) {
-        this.idlibrodiario = idlibrodiario;
+    public void setIdLibroDiario(Integer idLibroDiario) {
+        this.idLibroDiario = idLibroDiario;
+    }
+
+    public Partida getIdPartida() {
+        return idPartida;
+    }
+
+    public void setIdPartida(Partida idPartida) {
+        this.idPartida = idPartida;
     }
 
     public Collection<Partida> getPartidaCollection() {
@@ -61,7 +74,7 @@ public class LibroDiario implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idlibrodiario != null ? idlibrodiario.hashCode() : 0);
+        hash += (idLibroDiario != null ? idLibroDiario.hashCode() : 0);
         return hash;
     }
 
@@ -72,7 +85,7 @@ public class LibroDiario implements Serializable {
             return false;
         }
         LibroDiario other = (LibroDiario) object;
-        if ((this.idlibrodiario == null && other.idlibrodiario != null) || (this.idlibrodiario != null && !this.idlibrodiario.equals(other.idlibrodiario))) {
+        if ((this.idLibroDiario == null && other.idLibroDiario != null) || (this.idLibroDiario != null && !this.idLibroDiario.equals(other.idLibroDiario))) {
             return false;
         }
         return true;
@@ -80,7 +93,7 @@ public class LibroDiario implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.LibroDiario[ idlibrodiario=" + idlibrodiario + " ]";
+        return "entity.LibroDiario[ idLibroDiario=" + idLibroDiario + " ]";
     }
     
 }
