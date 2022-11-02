@@ -12,7 +12,8 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import entity.Partida;
+import entity.Saldo;
+import entity.PartidaDetalle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,37 +26,51 @@ import javax.persistence.Persistence;
  * @author Carlos Rafaelano
  */
 public class CuentasJpaController implements Serializable {
-
+    
     public CuentasJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("SistemaContableV1PruebaPU");
-
+    
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-
+    
     public CuentasJpaController() {
     }
-
+    
     public void create(Cuentas cuentas) throws PreexistingEntityException, Exception {
-        if (cuentas.getPartidaCollection() == null) {
-            cuentas.setPartidaCollection(new ArrayList<Partida>());
+        if (cuentas.getPartidaDetalleCollection() == null) {
+            cuentas.setPartidaDetalleCollection(new ArrayList<PartidaDetalle>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Partida> attachedPartidaCollection = new ArrayList<Partida>();
-            for (Partida partidaCollectionPartidaToAttach : cuentas.getPartidaCollection()) {
-                partidaCollectionPartidaToAttach = em.getReference(partidaCollectionPartidaToAttach.getClass(), partidaCollectionPartidaToAttach.getIdPartida());
-                attachedPartidaCollection.add(partidaCollectionPartidaToAttach);
+            Saldo idSaldo = cuentas.getIdSaldo();
+            if (idSaldo != null) {
+                idSaldo = em.getReference(idSaldo.getClass(), idSaldo.getIdSaldo());
+                cuentas.setIdSaldo(idSaldo);
             }
-            cuentas.setPartidaCollection(attachedPartidaCollection);
+            Collection<PartidaDetalle> attachedPartidaDetalleCollection = new ArrayList<PartidaDetalle>();
+            for (PartidaDetalle partidaDetalleCollectionPartidaDetalleToAttach : cuentas.getPartidaDetalleCollection()) {
+                partidaDetalleCollectionPartidaDetalleToAttach = em.getReference(partidaDetalleCollectionPartidaDetalleToAttach.getClass(), partidaDetalleCollectionPartidaDetalleToAttach.getId());
+                attachedPartidaDetalleCollection.add(partidaDetalleCollectionPartidaDetalleToAttach);
+            }
+            cuentas.setPartidaDetalleCollection(attachedPartidaDetalleCollection);
             em.persist(cuentas);
-            for (Partida partidaCollectionPartida : cuentas.getPartidaCollection()) {
-                partidaCollectionPartida.getCuentasCollection().add(cuentas);
-                partidaCollectionPartida = em.merge(partidaCollectionPartida);
+            if (idSaldo != null) {
+                idSaldo.getCuentasCollection().add(cuentas);
+                idSaldo = em.merge(idSaldo);
+            }
+            for (PartidaDetalle partidaDetalleCollectionPartidaDetalle : cuentas.getPartidaDetalleCollection()) {
+                Cuentas oldCodCuentaOfPartidaDetalleCollectionPartidaDetalle = partidaDetalleCollectionPartidaDetalle.getCodCuenta();
+                partidaDetalleCollectionPartidaDetalle.setCodCuenta(cuentas);
+                partidaDetalleCollectionPartidaDetalle = em.merge(partidaDetalleCollectionPartidaDetalle);
+                if (oldCodCuentaOfPartidaDetalleCollectionPartidaDetalle != null) {
+                    oldCodCuentaOfPartidaDetalleCollectionPartidaDetalle.getPartidaDetalleCollection().remove(partidaDetalleCollectionPartidaDetalle);
+                    oldCodCuentaOfPartidaDetalleCollectionPartidaDetalle = em.merge(oldCodCuentaOfPartidaDetalleCollectionPartidaDetalle);
+                }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -69,33 +84,52 @@ public class CuentasJpaController implements Serializable {
             }
         }
     }
-
+    
     public void edit(Cuentas cuentas) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             Cuentas persistentCuentas = em.find(Cuentas.class, cuentas.getCodCuenta());
-            Collection<Partida> partidaCollectionOld = persistentCuentas.getPartidaCollection();
-            Collection<Partida> partidaCollectionNew = cuentas.getPartidaCollection();
-            Collection<Partida> attachedPartidaCollectionNew = new ArrayList<Partida>();
-            for (Partida partidaCollectionNewPartidaToAttach : partidaCollectionNew) {
-                partidaCollectionNewPartidaToAttach = em.getReference(partidaCollectionNewPartidaToAttach.getClass(), partidaCollectionNewPartidaToAttach.getIdPartida());
-                attachedPartidaCollectionNew.add(partidaCollectionNewPartidaToAttach);
+            Saldo idSaldoOld = persistentCuentas.getIdSaldo();
+            Saldo idSaldoNew = cuentas.getIdSaldo();
+            Collection<PartidaDetalle> partidaDetalleCollectionOld = persistentCuentas.getPartidaDetalleCollection();
+            Collection<PartidaDetalle> partidaDetalleCollectionNew = cuentas.getPartidaDetalleCollection();
+            if (idSaldoNew != null) {
+                idSaldoNew = em.getReference(idSaldoNew.getClass(), idSaldoNew.getIdSaldo());
+                cuentas.setIdSaldo(idSaldoNew);
             }
-            partidaCollectionNew = attachedPartidaCollectionNew;
-            cuentas.setPartidaCollection(partidaCollectionNew);
+            Collection<PartidaDetalle> attachedPartidaDetalleCollectionNew = new ArrayList<PartidaDetalle>();
+            for (PartidaDetalle partidaDetalleCollectionNewPartidaDetalleToAttach : partidaDetalleCollectionNew) {
+                partidaDetalleCollectionNewPartidaDetalleToAttach = em.getReference(partidaDetalleCollectionNewPartidaDetalleToAttach.getClass(), partidaDetalleCollectionNewPartidaDetalleToAttach.getId());
+                attachedPartidaDetalleCollectionNew.add(partidaDetalleCollectionNewPartidaDetalleToAttach);
+            }
+            partidaDetalleCollectionNew = attachedPartidaDetalleCollectionNew;
+            cuentas.setPartidaDetalleCollection(partidaDetalleCollectionNew);
             cuentas = em.merge(cuentas);
-            for (Partida partidaCollectionOldPartida : partidaCollectionOld) {
-                if (!partidaCollectionNew.contains(partidaCollectionOldPartida)) {
-                    partidaCollectionOldPartida.getCuentasCollection().remove(cuentas);
-                    partidaCollectionOldPartida = em.merge(partidaCollectionOldPartida);
+            if (idSaldoOld != null && !idSaldoOld.equals(idSaldoNew)) {
+                idSaldoOld.getCuentasCollection().remove(cuentas);
+                idSaldoOld = em.merge(idSaldoOld);
+            }
+            if (idSaldoNew != null && !idSaldoNew.equals(idSaldoOld)) {
+                idSaldoNew.getCuentasCollection().add(cuentas);
+                idSaldoNew = em.merge(idSaldoNew);
+            }
+            for (PartidaDetalle partidaDetalleCollectionOldPartidaDetalle : partidaDetalleCollectionOld) {
+                if (!partidaDetalleCollectionNew.contains(partidaDetalleCollectionOldPartidaDetalle)) {
+                    partidaDetalleCollectionOldPartidaDetalle.setCodCuenta(null);
+                    partidaDetalleCollectionOldPartidaDetalle = em.merge(partidaDetalleCollectionOldPartidaDetalle);
                 }
             }
-            for (Partida partidaCollectionNewPartida : partidaCollectionNew) {
-                if (!partidaCollectionOld.contains(partidaCollectionNewPartida)) {
-                    partidaCollectionNewPartida.getCuentasCollection().add(cuentas);
-                    partidaCollectionNewPartida = em.merge(partidaCollectionNewPartida);
+            for (PartidaDetalle partidaDetalleCollectionNewPartidaDetalle : partidaDetalleCollectionNew) {
+                if (!partidaDetalleCollectionOld.contains(partidaDetalleCollectionNewPartidaDetalle)) {
+                    Cuentas oldCodCuentaOfPartidaDetalleCollectionNewPartidaDetalle = partidaDetalleCollectionNewPartidaDetalle.getCodCuenta();
+                    partidaDetalleCollectionNewPartidaDetalle.setCodCuenta(cuentas);
+                    partidaDetalleCollectionNewPartidaDetalle = em.merge(partidaDetalleCollectionNewPartidaDetalle);
+                    if (oldCodCuentaOfPartidaDetalleCollectionNewPartidaDetalle != null && !oldCodCuentaOfPartidaDetalleCollectionNewPartidaDetalle.equals(cuentas)) {
+                        oldCodCuentaOfPartidaDetalleCollectionNewPartidaDetalle.getPartidaDetalleCollection().remove(partidaDetalleCollectionNewPartidaDetalle);
+                        oldCodCuentaOfPartidaDetalleCollectionNewPartidaDetalle = em.merge(oldCodCuentaOfPartidaDetalleCollectionNewPartidaDetalle);
+                    }
                 }
             }
             em.getTransaction().commit();
@@ -114,7 +148,7 @@ public class CuentasJpaController implements Serializable {
             }
         }
     }
-
+    
     public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -127,10 +161,15 @@ public class CuentasJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The cuentas with id " + id + " no longer exists.", enfe);
             }
-            Collection<Partida> partidaCollection = cuentas.getPartidaCollection();
-            for (Partida partidaCollectionPartida : partidaCollection) {
-                partidaCollectionPartida.getCuentasCollection().remove(cuentas);
-                partidaCollectionPartida = em.merge(partidaCollectionPartida);
+            Saldo idSaldo = cuentas.getIdSaldo();
+            if (idSaldo != null) {
+                idSaldo.getCuentasCollection().remove(cuentas);
+                idSaldo = em.merge(idSaldo);
+            }
+            Collection<PartidaDetalle> partidaDetalleCollection = cuentas.getPartidaDetalleCollection();
+            for (PartidaDetalle partidaDetalleCollectionPartidaDetalle : partidaDetalleCollection) {
+                partidaDetalleCollectionPartidaDetalle.setCodCuenta(null);
+                partidaDetalleCollectionPartidaDetalle = em.merge(partidaDetalleCollectionPartidaDetalle);
             }
             em.remove(cuentas);
             em.getTransaction().commit();
@@ -140,15 +179,15 @@ public class CuentasJpaController implements Serializable {
             }
         }
     }
-
+    
     public List<Cuentas> findCuentasEntities() {
         return findCuentasEntities(true, -1, -1);
     }
-
+    
     public List<Cuentas> findCuentasEntities(int maxResults, int firstResult) {
         return findCuentasEntities(false, maxResults, firstResult);
     }
-
+    
     private List<Cuentas> findCuentasEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
@@ -164,7 +203,7 @@ public class CuentasJpaController implements Serializable {
             em.close();
         }
     }
-
+    
     public Cuentas findCuentas(Integer id) {
         EntityManager em = getEntityManager();
         try {
@@ -173,7 +212,7 @@ public class CuentasJpaController implements Serializable {
             em.close();
         }
     }
-
+    
     public int getCuentasCount() {
         EntityManager em = getEntityManager();
         try {

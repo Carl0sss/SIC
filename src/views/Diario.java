@@ -5,6 +5,7 @@
 package views;
 
 import javax.swing.table.DefaultTableModel;
+import dao.daoPartida;
 
 /**
  *
@@ -12,15 +13,22 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Diario extends javax.swing.JPanel {
 
+    daoPartida pdao = new daoPartida();
+
     /**
      * Creates new form Diario
      */
     public Diario() {
         initComponents();
         DefaultTableModel model;
-        String[] titulo = {"Fecha","Codigo", "Cuenta", "Descripcion", "Debe", "Haber"};
+        String[] titulo = {"Fecha", "Codigo", "Cuenta", "Descripcion", "Debe", "Haber"};
         model = new DefaultTableModel(null, titulo);
         tblDiario.setModel(model);
+        listar();
+    }
+
+    void listar() {
+        pdao.listarDiario(tblDiario);
     }
 
     /**
@@ -63,6 +71,11 @@ public class Diario extends javax.swing.JPanel {
 
         btnGenerar.setBackground(new java.awt.Color(0, 102, 255));
         btnGenerar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnGenerar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnGenerarMousePressed(evt);
+            }
+        });
         btnGenerar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel10.setBackground(new java.awt.Color(255, 255, 255));
@@ -94,6 +107,10 @@ public class Diario extends javax.swing.JPanel {
                 .addGap(19, 19, 19))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnGenerarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGenerarMousePressed
+
+    }//GEN-LAST:event_btnGenerarMousePressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

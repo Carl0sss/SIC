@@ -7,9 +7,16 @@ package views;
 //import dao.old.cuentaDAO;
 //import entity.old.Cuenta;
 import dao.daoCuenta;
+import dao.daoPartida;
 import entity.Cuentas;
+import entity.Partida;
+import entity.Saldo;
 import java.awt.Color;
+import java.time.LocalDate;
+import java.util.Date;
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.DefaultButtonModel;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -22,6 +29,9 @@ import javax.swing.table.DefaultTableModel;
 public class Registro extends javax.swing.JPanel {
 
     private daoCuenta cDAO = new daoCuenta();
+    daoPartida pDAO = new daoPartida();
+    Cuentas cuenta = new Cuentas();
+//    private daoPartida pDAO = new daoPartida();
     ButtonGroup group = new ButtonGroup();
     DefaultTableModel model;
 
@@ -32,20 +42,24 @@ public class Registro extends javax.swing.JPanel {
         initComponents();
         //Iniciar principales
 
-        String[] titulo = {"Codigo", "Cuenta", "Descripcion", "Debe", "Haber"};
-        model = new DefaultTableModel(null, titulo);
-        tblPartida.setModel(model);
-        //rdb
-        ButtonGroup group = new ButtonGroup();
+        setModel();
+
         group.add(rdbDebe);
         group.add(rdbHaber);
 //        mostrarTabla();
         getCuentas(cmbCuenta);
+
     }
 
     /**
      * METODOS
      */
+    private void setModel() {
+        String[] titulo = {"Codigo", "Cuenta", "Descripcion", "Debe", "Haber"};
+        model = new DefaultTableModel(null, titulo);
+        tblPartida.setModel(model);
+    }
+
     private void getCuentas(JComboBox cmb) {
         cDAO.getCuentaCmb(cmb);
     }
@@ -66,46 +80,78 @@ public class Registro extends javax.swing.JPanel {
         panel.setBackground(new Color(224, 224, 224));
     }
 
-//    void ReadData() {
-//        double debe = 0.0;
-//        double haber = 0.0;
-////        String cuenta = cmbCuenta.getItemAt(cmbCuenta.getSelectedIndex()).getNombrecuenta();
-////        int id = cmbCuenta.getItemAt(cmbCuenta.getSelectedIndex()).getIdcuenta();
-//        String descripcion = txtDescripcion.getText();
-//        if (rdbDebe.isSelected() == true) {
-//            debe = (double) numMonto.getValue();
-//        } else {
-//            haber = (double) numMonto.getValue();
-//        }
-//        System.out.println(debe + " " + haber + " " + cuenta + " " + id + "" + descripcion);
-//
-//        String[] sd = {"" + id, cuenta, descripcion, "" + debe, "" + haber};
-//        model.addRow(sd);
-//        tblPartida.setModel(model);
-//    }
-    private void limpiar() {
-        txtDescripcion.setText("");
-        numMonto.setValue(0.0);
+    void ReadData() {
+        double debe = 0.0;
+        double haber = 0.0;
+        cuenta = (Cuentas) cmbCuenta.getSelectedItem();
+        String cta = this.cuenta.getNombreCuenta();
+        int id = this.cuenta.getCodCuenta();
+        String descripcion = txtDescripcion.getText();
+        if (rdbDebe.isSelected() == true) {
+            debe = (double) numMonto.getValue();
+        } else {
+            haber = (double) numMonto.getValue();
+        }
+
+        System.out.println(debe + " " + haber + " " + cta + " " + id + "" + descripcion);
+        String[] sd = {"" + id, cta, descripcion, "" + debe, "" + haber};
+        model.addRow(sd);
+        tblPartida.setModel(model);
     }
 
-    void dualidad() {
+    void ReadDataTable() {
+        if (dualidad()) {
+            double haber = 0.0;
+            double debe = 0.0;
+            String descripcion;
+            int codCuenta;
+            int numPartida;
+            Date fecha = new Date();
+            descripcion = tblPartida.getValueAt(0, 2).toString();
+            System.out.println("-" + fecha + "-" + descripcion);
+            pDAO.insertPartida(fecha, descripcion);
+            //Leyendo cada fila de cada columna
+            if (tblPartida.getRowCount() > 0) {
+                for (int i = 0; i < tblPartida.getRowCount(); i++) {
+                    debe = Double.parseDouble(tblPartida.getValueAt(i, 3).toString());
+                    haber = Double.parseDouble(tblPartida.getValueAt(i, 4).toString());
+                    codCuenta = Integer.parseInt(tblPartida.getValueAt(i, 0).toString());
+                    numPartida = pDAO.getLastNumPartida();
+                    pDAO.insertDetallePartida(codCuenta, numPartida, debe, haber);
+                    System.out.println(+numPartida + "" + debe + "- " + haber + "-" + codCuenta);
+
+                }
+            }
+            JOptionPane.showMessageDialog(null, "Transaccíon registrada correctaente");
+//            limpiar();
+//            txtDescripcion.setText("");
+        }
+
+    }
+
+    private void limpiar() {
+        numMonto.setValue(0.0);
+        group.clearSelection();
+        cmbCuenta.setSelectedIndex(0);
+    }
+
+    boolean dualidad() {
         double sum1 = 0;
         double sum2 = 0;
         double a, b;
-        try {
-            if (tblPartida.getRowCount() > 0) {
-                for (int i = 0; i < tblPartida.getRowCount(); i++) {
-                    a = (double) Double.parseDouble(tblPartida.getValueAt(i, 3).toString());
-                    b = (double) Double.parseDouble(tblPartida.getValueAt(i, 4).toString());
-                    sum2 += b;
-                    sum1 += a;
-                }
+        if (tblPartida.getRowCount() > 0) {
+            for (int i = 0; i < tblPartida.getRowCount(); i++) {
+                a = (double) Double.parseDouble(tblPartida.getValueAt(i, 3).toString());
+                b = (double) Double.parseDouble(tblPartida.getValueAt(i, 4).toString());
+                sum2 += b;
+                sum1 += a;
             }
-            if (sum1 != sum2) {
-                JOptionPane.showMessageDialog(null, "No existe dualidad");
-            }
-        } catch (Exception e) {
         }
+        if (sum1 != sum2) {
+            JOptionPane.showMessageDialog(null, "No existe dualidad");
+            return false;
+        }
+        return true;
     }
 //    private void mostrarTabla(){
 //        cDAO.listCuenta(tblPartida);
@@ -294,6 +340,9 @@ public class Registro extends javax.swing.JPanel {
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnBorrarMouseExited(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnBorrarMousePressed(evt);
+            }
         });
         btnBorrar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -344,15 +393,22 @@ public class Registro extends javax.swing.JPanel {
 
     private void btnCancelarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMousePressed
         limpiar();
+        txtDescripcion.setText("");
     }//GEN-LAST:event_btnCancelarMousePressed
 
     private void btnAceptarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMousePressed
-//        ReadData();
+        ReadData();
+        limpiar();
     }//GEN-LAST:event_btnAceptarMousePressed
 
     private void btnRegistrarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegistrarMousePressed
-        dualidad();
+        ReadDataTable();
     }//GEN-LAST:event_btnRegistrarMousePressed
+
+    private void btnBorrarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBorrarMousePressed
+        tblPartida.setModel(new DefaultTableModel());
+        setModel();
+    }//GEN-LAST:event_btnBorrarMousePressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

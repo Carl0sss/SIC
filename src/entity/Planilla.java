@@ -8,6 +8,8 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -24,7 +26,7 @@ import javax.persistence.Table;
     @NamedQuery(name = "Planilla.findByNombreEmpleado", query = "SELECT p FROM Planilla p WHERE p.nombreEmpleado = :nombreEmpleado"),
     @NamedQuery(name = "Planilla.findByOcupacion", query = "SELECT p FROM Planilla p WHERE p.ocupacion = :ocupacion"),
     @NamedQuery(name = "Planilla.findByHorasTrabajadas", query = "SELECT p FROM Planilla p WHERE p.horasTrabajadas = :horasTrabajadas"),
-    @NamedQuery(name = "Planilla.findBySalario", query = "SELECT p FROM Planilla p WHERE p.salario = :salario"),
+    @NamedQuery(name = "Planilla.findBySalarioHora", query = "SELECT p FROM Planilla p WHERE p.salarioHora = :salarioHora"),
     @NamedQuery(name = "Planilla.findByDiasTrabajados", query = "SELECT p FROM Planilla p WHERE p.diasTrabajados = :diasTrabajados"),
     @NamedQuery(name = "Planilla.findByIdTrabajador", query = "SELECT p FROM Planilla p WHERE p.idTrabajador = :idTrabajador")})
 public class Planilla implements Serializable {
@@ -37,11 +39,12 @@ public class Planilla implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "horas_trabajadas")
     private Double horasTrabajadas;
-    @Column(name = "salario")
-    private Double salario;
+    @Column(name = "salario_hora")
+    private Double salarioHora;
     @Column(name = "dias_trabajados")
     private Integer diasTrabajados;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_trabajador")
     private Integer idTrabajador;
@@ -77,12 +80,12 @@ public class Planilla implements Serializable {
         this.horasTrabajadas = horasTrabajadas;
     }
 
-    public Double getSalario() {
-        return salario;
+    public Double getSalarioHora() {
+        return salarioHora;
     }
 
-    public void setSalario(Double salario) {
-        this.salario = salario;
+    public void setSalarioHora(Double salarioHora) {
+        this.salarioHora = salarioHora;
     }
 
     public Integer getDiasTrabajados() {

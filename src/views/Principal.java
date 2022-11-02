@@ -7,6 +7,7 @@ package views;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.time.LocalDate;
+import java.util.Date;
 import javax.swing.JPanel;
 import org.w3c.dom.css.RGBColor;
 
@@ -24,7 +25,6 @@ public class Principal extends javax.swing.JFrame {
         this.setTitle("Sistema Contable");
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        
 
         //para escribir la fecha en la pantalla
         LocalDate now = LocalDate.now();
@@ -34,7 +34,6 @@ public class Principal extends javax.swing.JFrame {
         String[] meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", " ;Septiembre",
             "Octubre", "Noviembre", "Diciemrbre"};
         fecha.setText("Hoy es " + dia + " de " + meses[month - 1] + " de " + year);
-
         //para mostrar el Dashboard
         Dashboard ds = new Dashboard();
         ds.setSize(780, 510);
@@ -498,6 +497,7 @@ public class Principal extends javax.swing.JFrame {
                 new Principal().setVisible(true);
             }
         });
+
     }
 
     /*

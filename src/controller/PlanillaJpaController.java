@@ -5,7 +5,6 @@
 package controller;
 
 import controller.exceptions.NonexistentEntityException;
-import controller.exceptions.PreexistingEntityException;
 import entity.Planilla;
 import java.io.Serializable;
 import java.util.List;
@@ -35,18 +34,13 @@ public class PlanillaJpaController implements Serializable {
     public PlanillaJpaController() {
     }
 
-    public void create(Planilla planilla) throws PreexistingEntityException, Exception {
+    public void create(Planilla planilla) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             em.persist(planilla);
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findPlanilla(planilla.getIdTrabajador()) != null) {
-                throw new PreexistingEntityException("Planilla " + planilla + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -143,5 +137,5 @@ public class PlanillaJpaController implements Serializable {
             em.close();
         }
     }
-
+    
 }

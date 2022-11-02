@@ -11,10 +11,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -26,7 +26,7 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "Cuentas.findAll", query = "SELECT c FROM Cuentas c"),
     @NamedQuery(name = "Cuentas.findByCodCuenta", query = "SELECT c FROM Cuentas c WHERE c.codCuenta = :codCuenta"),
-    @NamedQuery(name = "Cuentas.findByNombre", query = "SELECT c FROM Cuentas c WHERE c.nombre = :nombre")})
+    @NamedQuery(name = "Cuentas.findByNombreCuenta", query = "SELECT c FROM Cuentas c WHERE c.nombreCuenta = :nombreCuenta")})
 public class Cuentas implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,13 +34,13 @@ public class Cuentas implements Serializable {
     @Basic(optional = false)
     @Column(name = "cod_cuenta")
     private Integer codCuenta;
-    @Column(name = "nombre")
-    private String nombre;
-    @JoinTable(name = "contiene", joinColumns = {
-        @JoinColumn(name = "cod_cuenta", referencedColumnName = "cod_cuenta")}, inverseJoinColumns = {
-        @JoinColumn(name = "id_partida", referencedColumnName = "id_partida")})
-    @ManyToMany
-    private Collection<Partida> partidaCollection;
+    @Column(name = "nombre_cuenta")
+    private String nombreCuenta;
+    @OneToMany(mappedBy = "codCuenta")
+    private Collection<PartidaDetalle> partidaDetalleCollection;
+    @JoinColumn(name = "id_saldo", referencedColumnName = "id_saldo")
+    @ManyToOne(optional = false)
+    private Saldo idSaldo;
 
     public Cuentas() {
     }
@@ -57,20 +57,28 @@ public class Cuentas implements Serializable {
         this.codCuenta = codCuenta;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombreCuenta() {
+        return nombreCuenta;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombreCuenta(String nombreCuenta) {
+        this.nombreCuenta = nombreCuenta;
     }
 
-    public Collection<Partida> getPartidaCollection() {
-        return partidaCollection;
+    public Collection<PartidaDetalle> getPartidaDetalleCollection() {
+        return partidaDetalleCollection;
     }
 
-    public void setPartidaCollection(Collection<Partida> partidaCollection) {
-        this.partidaCollection = partidaCollection;
+    public void setPartidaDetalleCollection(Collection<PartidaDetalle> partidaDetalleCollection) {
+        this.partidaDetalleCollection = partidaDetalleCollection;
+    }
+
+    public Saldo getIdSaldo() {
+        return idSaldo;
+    }
+
+    public void setIdSaldo(Saldo idSaldo) {
+        this.idSaldo = idSaldo;
     }
 
     @Override
@@ -95,7 +103,7 @@ public class Cuentas implements Serializable {
 
     @Override
     public String toString() {
-        return codCuenta + " "+ nombre;
+        return codCuenta + "  " + nombreCuenta;
     }
-    
+
 }

@@ -10,10 +10,9 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -29,57 +28,38 @@ import javax.persistence.TemporalType;
 @Table(name = "partida")
 @NamedQueries({
     @NamedQuery(name = "Partida.findAll", query = "SELECT p FROM Partida p"),
-    @NamedQuery(name = "Partida.findByDebe", query = "SELECT p FROM Partida p WHERE p.debe = :debe"),
-    @NamedQuery(name = "Partida.findByHaber", query = "SELECT p FROM Partida p WHERE p.haber = :haber"),
+    @NamedQuery(name = "Partida.findByNumPartida", query = "SELECT p FROM Partida p WHERE p.numPartida = :numPartida"),
     @NamedQuery(name = "Partida.findByFecha", query = "SELECT p FROM Partida p WHERE p.fecha = :fecha"),
-    @NamedQuery(name = "Partida.findByIdPartida", query = "SELECT p FROM Partida p WHERE p.idPartida = :idPartida")})
+    @NamedQuery(name = "Partida.findByDescripcion", query = "SELECT p FROM Partida p WHERE p.descripcion = :descripcion")})
 public class Partida implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "debe")
-    private Double debe;
-    @Column(name = "haber")
-    private Double haber;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "num_partida")
+    private Integer numPartida;
     @Column(name = "fecha")
     @Temporal(TemporalType.DATE)
     private Date fecha;
-    @Id
-    @Basic(optional = false)
-    @Column(name = "id_partida")
-    private Integer idPartida;
-    @ManyToMany(mappedBy = "partidaCollection")
-    private Collection<Cuentas> cuentasCollection;
-    @OneToMany(mappedBy = "idPartida")
-    private Collection<LibroDiario> libroDiarioCollection;
-    @JoinColumn(name = "id_libro_diario", referencedColumnName = "id_libro_diario")
-    @ManyToOne(optional = false)
-    private LibroDiario idLibroDiario;
-    @JoinColumn(name = "id_libro_mayor", referencedColumnName = "id_libro_mayor")
-    @ManyToOne
-    private LibroMayor idLibroMayor;
+    @Column(name = "descripcion")
+    private String descripcion;
+    @OneToMany(mappedBy = "numPartida")
+    private Collection<PartidaDetalle> partidaDetalleCollection;
 
     public Partida() {
     }
 
-    public Partida(Integer idPartida) {
-        this.idPartida = idPartida;
+    public Partida(Integer numPartida) {
+        this.numPartida = numPartida;
     }
 
-    public Double getDebe() {
-        return debe;
+    public Integer getNumPartida() {
+        return numPartida;
     }
 
-    public void setDebe(Double debe) {
-        this.debe = debe;
-    }
-
-    public Double getHaber() {
-        return haber;
-    }
-
-    public void setHaber(Double haber) {
-        this.haber = haber;
+    public void setNumPartida(Integer numPartida) {
+        this.numPartida = numPartida;
     }
 
     public Date getFecha() {
@@ -90,50 +70,26 @@ public class Partida implements Serializable {
         this.fecha = fecha;
     }
 
-    public Integer getIdPartida() {
-        return idPartida;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setIdPartida(Integer idPartida) {
-        this.idPartida = idPartida;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    public Collection<Cuentas> getCuentasCollection() {
-        return cuentasCollection;
+    public Collection<PartidaDetalle> getPartidaDetalleCollection() {
+        return partidaDetalleCollection;
     }
 
-    public void setCuentasCollection(Collection<Cuentas> cuentasCollection) {
-        this.cuentasCollection = cuentasCollection;
-    }
-
-    public Collection<LibroDiario> getLibroDiarioCollection() {
-        return libroDiarioCollection;
-    }
-
-    public void setLibroDiarioCollection(Collection<LibroDiario> libroDiarioCollection) {
-        this.libroDiarioCollection = libroDiarioCollection;
-    }
-
-    public LibroDiario getIdLibroDiario() {
-        return idLibroDiario;
-    }
-
-    public void setIdLibroDiario(LibroDiario idLibroDiario) {
-        this.idLibroDiario = idLibroDiario;
-    }
-
-    public LibroMayor getIdLibroMayor() {
-        return idLibroMayor;
-    }
-
-    public void setIdLibroMayor(LibroMayor idLibroMayor) {
-        this.idLibroMayor = idLibroMayor;
+    public void setPartidaDetalleCollection(Collection<PartidaDetalle> partidaDetalleCollection) {
+        this.partidaDetalleCollection = partidaDetalleCollection;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idPartida != null ? idPartida.hashCode() : 0);
+        hash += (numPartida != null ? numPartida.hashCode() : 0);
         return hash;
     }
 
@@ -144,7 +100,7 @@ public class Partida implements Serializable {
             return false;
         }
         Partida other = (Partida) object;
-        if ((this.idPartida == null && other.idPartida != null) || (this.idPartida != null && !this.idPartida.equals(other.idPartida))) {
+        if ((this.numPartida == null && other.numPartida != null) || (this.numPartida != null && !this.numPartida.equals(other.numPartida))) {
             return false;
         }
         return true;
@@ -152,7 +108,7 @@ public class Partida implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Partida[ idPartida=" + idPartida + " ]";
+        return numPartida + "";
     }
-    
+
 }

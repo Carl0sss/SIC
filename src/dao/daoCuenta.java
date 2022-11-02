@@ -25,7 +25,7 @@ public class daoCuenta {
     private Cuentas cuenta = new Cuentas();
     private String msg = "";
 
-    //Para llenar el combobox con las cuentas
+    //Para llenar el comboBox con las cuentas
     public void getCuentaCmb(JComboBox<Cuentas> cmbCuenta) {
         EntityManager em = cjc.getEntityManager();
         Iterator it = em.createQuery("SELECT c FROM Cuentas c").getResultList().iterator();
@@ -37,5 +37,15 @@ public class daoCuenta {
             }
         } catch (Exception e) {
         }
+    }
+
+    //Recuperar id saldo de una cuenta
+    public int getIdSaldo(int cod) {
+        int id;
+        EntityManager em = cjc.getEntityManager();
+        Query query = em.createNativeQuery("select cuentas.id_saldo from cuentas where cuentas.cod_cuenta = " + cod);
+        String ls = query.getSingleResult().toString();
+        id = Integer.parseInt(ls);
+        return id;
     }
 }
