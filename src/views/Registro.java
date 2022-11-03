@@ -54,16 +54,19 @@ public class Registro extends javax.swing.JPanel {
     /**
      * METODOS
      */
+    //Setea el modelo de la tabla
     private void setModel() {
         String[] titulo = {"Codigo", "Cuenta", "Descripcion", "Debe", "Haber"};
         model = new DefaultTableModel(null, titulo);
         tblPartida.setModel(model);
     }
 
+    //Llena el comboBox con las cuentas
     private void getCuentas(JComboBox cmb) {
         cDAO.getCuentaCmb(cmb);
     }
 
+    //Para el cambio de colores en los elementos de la vista
     void setColorBtnAccept(JPanel panel) {
         panel.setBackground(new Color(0, 90, 225));
     }
@@ -80,6 +83,7 @@ public class Registro extends javax.swing.JPanel {
         panel.setBackground(new Color(224, 224, 224));
     }
 
+    //Lee los datos del formulario y los almacena en una tabla
     void ReadData() {
         double debe = 0.0;
         double haber = 0.0;
@@ -99,6 +103,7 @@ public class Registro extends javax.swing.JPanel {
         tblPartida.setModel(model);
     }
 
+    //Lee los datos almacenados en una tabla
     void ReadDataTable() {
         if (dualidad()) {
             double haber = 0.0;
@@ -106,11 +111,10 @@ public class Registro extends javax.swing.JPanel {
             String descripcion;
             int codCuenta;
             int numPartida;
-            Date fecha = new Date();
+            LocalDate fecha = LocalDate.now();
             descripcion = tblPartida.getValueAt(0, 2).toString();
-            System.out.println("-" + fecha + "-" + descripcion);
             pDAO.insertPartida(fecha, descripcion);
-            //Leyendo cada fila de cada columna
+            //Leyendo cada fila de la tabla
             if (tblPartida.getRowCount() > 0) {
                 for (int i = 0; i < tblPartida.getRowCount(); i++) {
                     debe = Double.parseDouble(tblPartida.getValueAt(i, 3).toString());
@@ -118,23 +122,24 @@ public class Registro extends javax.swing.JPanel {
                     codCuenta = Integer.parseInt(tblPartida.getValueAt(i, 0).toString());
                     numPartida = pDAO.getLastNumPartida();
                     pDAO.insertDetallePartida(codCuenta, numPartida, debe, haber);
-                    System.out.println(+numPartida + "" + debe + "- " + haber + "-" + codCuenta);
 
                 }
             }
-            JOptionPane.showMessageDialog(null, "Transaccíon registrada correctaente");
-//            limpiar();
-//            txtDescripcion.setText("");
+            JOptionPane.showMessageDialog(null, "Transaccíon registrada correctamente");
+            limpiar();
+            txtDescripcion.setText("");
         }
 
     }
 
+    //Limpia el formulario
     private void limpiar() {
         numMonto.setValue(0.0);
         group.clearSelection();
         cmbCuenta.setSelectedIndex(0);
     }
 
+    //Verifica la dualidad de una partida
     boolean dualidad() {
         double sum1 = 0;
         double sum2 = 0;

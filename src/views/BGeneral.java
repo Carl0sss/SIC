@@ -4,6 +4,9 @@
  */
 package views;
 
+import dao.daoPartida;
+import java.awt.Color;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -12,15 +15,67 @@ import javax.swing.table.DefaultTableModel;
  */
 public class BGeneral extends javax.swing.JPanel {
 
+    daoPartida pDAO = new daoPartida();
+
     /**
      * Creates new form BGeneral
      */
     public BGeneral() {
         initComponents();
         DefaultTableModel model;
-        String[] titulo = {"Cuenta","Debe", "Haber"};
+        String[] titulo = {"Cuenta", "Debe", "Haber"};
         model = new DefaultTableModel(null, titulo);
         tblBGeneral.setModel(model);
+        pDAO.listarBalance(tblBGeneral);
+        ocultar();
+    }
+
+    /**
+     * METODOS
+     *
+     */
+    
+    private void saldarCuentas() {
+        double sum1 = 0;
+        double sum2 = 0;
+        double a, b;
+        if (tblBGeneral.getRowCount() > 0) {
+            for (int i = 0; i < tblBGeneral.getRowCount(); i++) {
+                a = (double) Double.parseDouble(tblBGeneral.getValueAt(i, 2).toString());
+                b = (double) Double.parseDouble(tblBGeneral.getValueAt(i, 3).toString());
+                sum2 += b;
+                sum1 += a;
+
+            }
+            txtHaber.setText("$ " + sum2);
+            txtDebe.setText("$ " + sum1);
+            mostrar();
+
+        }
+    }
+    
+    private void ocultar() {
+
+        txtDebe.setVisible(false);
+        txtHaber.setVisible(false);
+        txtSuma.setVisible(false);
+        jSeparator1.setVisible(false);
+    }
+    private void mostrar() {
+
+        txtDebe.setVisible(true);
+        txtHaber.setVisible(true);
+        txtSuma.setVisible(true);
+        jSeparator1.setVisible(true);
+    }
+    
+     //Para el cambio de colores en los elementos de la vista
+    void setColorBtnAccept(JPanel panel) {
+        panel.setBackground(new Color(0, 90, 225));
+    }
+
+    void resetColorBtnAccept(JPanel panel) {
+        panel.setBackground(new Color(0, 102, 255));
     }
 
     /**
@@ -36,6 +91,10 @@ public class BGeneral extends javax.swing.JPanel {
         tblBGeneral = new javax.swing.JTable();
         btnGenerar = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
+        txtSuma = new javax.swing.JLabel();
+        txtDebe = new javax.swing.JLabel();
+        txtHaber = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(780, 510));
@@ -59,10 +118,21 @@ public class BGeneral extends javax.swing.JPanel {
         ));
         jScrollPane2.setViewportView(tblBGeneral);
 
-        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 690, 380));
+        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 690, 320));
 
         btnGenerar.setBackground(new java.awt.Color(0, 102, 255));
         btnGenerar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnGenerar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnGenerarMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnGenerarMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnGenerarMousePressed(evt);
+            }
+        });
         btnGenerar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel10.setBackground(new java.awt.Color(255, 255, 255));
@@ -72,6 +142,21 @@ public class BGeneral extends javax.swing.JPanel {
         btnGenerar.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jPanel2.add(btnGenerar, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 410, 110, 30));
+
+        txtSuma.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        txtSuma.setText("Sumas");
+        jPanel2.add(txtSuma, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 340, -1, -1));
+
+        txtDebe.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        txtDebe.setText("Debe");
+        jPanel2.add(txtDebe, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 340, -1, -1));
+
+        txtHaber.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        txtHaber.setText("Haber");
+        jPanel2.add(txtHaber, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 340, -1, -1));
+
+        jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
+        jPanel2.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 360, 200, 10));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -95,6 +180,18 @@ public class BGeneral extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnGenerarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGenerarMousePressed
+        saldarCuentas();
+    }//GEN-LAST:event_btnGenerarMousePressed
+
+    private void btnGenerarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGenerarMouseEntered
+        setColorBtnAccept(btnGenerar);
+    }//GEN-LAST:event_btnGenerarMouseEntered
+
+    private void btnGenerarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGenerarMouseExited
+        resetColorBtnAccept(btnGenerar);
+    }//GEN-LAST:event_btnGenerarMouseExited
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel btnGenerar;
@@ -102,6 +199,10 @@ public class BGeneral extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable tblBGeneral;
+    private javax.swing.JLabel txtDebe;
+    private javax.swing.JLabel txtHaber;
+    private javax.swing.JLabel txtSuma;
     // End of variables declaration//GEN-END:variables
 }

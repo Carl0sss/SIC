@@ -3,15 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Carlos%20Rafaelano/Documents/NetBeansProjects/SistemaContableV1Prueba/src/entity/PartidaDetalle.java</file>
-            <file>file:/C:/Users/Carlos%20Rafaelano/Documents/NetBeansProjects/SistemaContableV1Prueba/src/entity/Partida.java</file>
             <file>file:/C:/Users/Carlos%20Rafaelano/Documents/NetBeansProjects/SistemaContableV1Prueba/src/dao/daoCuenta.java</file>
             <file>file:/C:/Users/Carlos%20Rafaelano/Documents/NetBeansProjects/SistemaContableV1Prueba/src/dao/daoPartida.java</file>
-            <file>file:/C:/Users/Carlos%20Rafaelano/Documents/NetBeansProjects/SistemaContableV1Prueba/src/controller/CuentasJpaController.java</file>
-            <file>file:/C:/Users/Carlos%20Rafaelano/Documents/NetBeansProjects/SistemaContableV1Prueba/src/views/Registro.java</file>
-            <file>file:/C:/Users/Carlos%20Rafaelano/Documents/NetBeansProjects/SistemaContableV1Prueba/src/views/Principal.java</file>
-            <file>file:/C:/Users/Carlos%20Rafaelano/Documents/NetBeansProjects/SistemaContableV1Prueba/src/entity/Saldo.java</file>
-            <file>file:/C:/Users/Carlos%20Rafaelano/Documents/NetBeansProjects/SistemaContableV1Prueba/src/entity/Cuentas.java</file>
+            <file>file:/C:/Users/Carlos%20Rafaelano/Documents/NetBeansProjects/SistemaContableV1Prueba/src/views/BComprobacion.java</file>
         </group>
     </open-files>
 </project-private>

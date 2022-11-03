@@ -4,6 +4,10 @@
  */
 package views;
 
+import dao.daoCuenta;
+import dao.daoPartida;
+import entity.Cuentas;
+import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -12,15 +16,95 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Mayor extends javax.swing.JPanel {
 
+    private daoCuenta cDAO = new daoCuenta();
+    daoPartida pDAO = new daoPartida();
+    Cuentas cuenta = new Cuentas();
+    DefaultTableModel model;
+
     /**
      * Creates new form Mayor
      */
     public Mayor() {
         initComponents();
         DefaultTableModel model;
-        String[] titulo = {"Codigo", "Cuenta", "Debe", "Haber"};
+        String[] titulo = {"Nº Partida", "Fecha", "Cuenta", "Descripcion", "Debe", "Haber"};
         model = new DefaultTableModel(null, titulo);
         tblMayor.setModel(model);
+        getCuentas(cmbCuenta);
+        ocultar();
+    }
+
+    /**
+     * METODOS
+     *
+     */
+    private void getCuentas(JComboBox cmb) {
+        cDAO.getCuentaCmb(cmb);
+    }
+
+    //Traer la consulta de cuentas
+    private void getDetalleCuenta() {
+        cuenta = (Cuentas) cmbCuenta.getSelectedItem();
+        int codCuenta = this.cuenta.getCodCuenta();
+        pDAO.listarMayor(tblMayor, codCuenta);
+        int saldo = this.cuenta.getIdSaldo().getIdSaldo();
+        if (tblMayor.getRowCount() > 0) {
+            saldarCuentas(saldo);
+        }else{
+            ocultar();
+        }
+
+    }
+
+    //para saldar las cuentas
+    private void saldarCuentas(int saldo) {
+        double sum1 = 0;
+        double sum2 = 0;
+        double a, b;
+        double sa;
+        if (tblMayor.getRowCount() > 0) {
+            for (int i = 0; i < tblMayor.getRowCount(); i++) {
+                a = (double) Double.parseDouble(tblMayor.getValueAt(i, 4).toString());
+                b = (double) Double.parseDouble(tblMayor.getValueAt(i, 5).toString());
+                sum2 += b;
+                sum1 += a;
+
+            }
+            txtHaber.setText("$ " + sum2);
+            txtDebe.setText("$ " + sum1);
+            if (saldo == 1) {
+                sa = sum1 - sum2;
+                txtAc.setText("$ " + sa);
+                txtDeu.setText("");
+            } else {
+                sa = sum2 - sum1;
+                txtAc.setText("");
+                txtDeu.setText("$ " + sa);
+            }
+            mostrar();
+
+        }
+    }
+
+    //para ocultar y mostrar elementos
+    private void ocultar() {
+        txtAc.setVisible(false);
+        txtDeu.setVisible(false);
+        txtDebe.setVisible(false);
+        txtHaber.setVisible(false);
+        txtSaldo.setVisible(false);
+        txtSuma.setVisible(false);
+        jSeparator1.setVisible(false);
+    }
+
+    private void mostrar() {
+        txtAc.setVisible(true);
+        txtDeu.setVisible(true);
+        txtDebe.setVisible(true);
+        txtHaber.setVisible(true);
+        txtSaldo.setVisible(true);
+        txtSuma.setVisible(true);
+        jSeparator1.setVisible(true);
     }
 
     /**
@@ -36,6 +120,15 @@ public class Mayor extends javax.swing.JPanel {
         tblMayor = new javax.swing.JTable();
         btnGenerar = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
+        cmbCuenta = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
+        txtSaldo = new javax.swing.JLabel();
+        txtHaber = new javax.swing.JLabel();
+        txtAc = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        txtDebe = new javax.swing.JLabel();
+        txtDeu = new javax.swing.JLabel();
+        txtSuma = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(780, 510));
@@ -59,10 +152,15 @@ public class Mayor extends javax.swing.JPanel {
         ));
         jScrollPane2.setViewportView(tblMayor);
 
-        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 690, 380));
+        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 690, 230));
 
         btnGenerar.setBackground(new java.awt.Color(0, 102, 255));
         btnGenerar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnGenerar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnGenerarMousePressed(evt);
+            }
+        });
         btnGenerar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel10.setBackground(new java.awt.Color(255, 255, 255));
@@ -71,7 +169,41 @@ public class Mayor extends javax.swing.JPanel {
         jLabel10.setText("Generar Reporte");
         btnGenerar.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        jPanel2.add(btnGenerar, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 410, 110, 30));
+        jPanel2.add(btnGenerar, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 40, 110, 30));
+
+        cmbCuenta.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        jPanel2.add(cmbCuenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 40, 280, 30));
+
+        jLabel5.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        jLabel5.setText("Cuenta");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, -1, -1));
+
+        txtSaldo.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        txtSaldo.setText("Saldo");
+        jPanel2.add(txtSaldo, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 360, -1, -1));
+
+        txtHaber.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        txtHaber.setText("Haber");
+        jPanel2.add(txtHaber, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 330, -1, -1));
+
+        txtAc.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        txtAc.setText("SaldoAc");
+        jPanel2.add(txtAc, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 360, -1, -1));
+
+        jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
+        jPanel2.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 350, 200, 10));
+
+        txtDebe.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        txtDebe.setText("Debe");
+        jPanel2.add(txtDebe, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 330, -1, -1));
+
+        txtDeu.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        txtDeu.setText("SaldoDe");
+        jPanel2.add(txtDeu, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 360, -1, -1));
+
+        txtSuma.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        txtSuma.setText("Sumas");
+        jPanel2.add(txtSuma, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 330, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -95,13 +227,26 @@ public class Mayor extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnGenerarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGenerarMousePressed
+        getDetalleCuenta();
+    }//GEN-LAST:event_btnGenerarMousePressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel btnGenerar;
+    private javax.swing.JComboBox<Cuentas> cmbCuenta;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable tblMayor;
+    private javax.swing.JLabel txtAc;
+    private javax.swing.JLabel txtDebe;
+    private javax.swing.JLabel txtDeu;
+    private javax.swing.JLabel txtHaber;
+    private javax.swing.JLabel txtSaldo;
+    private javax.swing.JLabel txtSuma;
     // End of variables declaration//GEN-END:variables
 }

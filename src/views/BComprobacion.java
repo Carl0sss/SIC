@@ -4,6 +4,7 @@
  */
 package views;
 
+import dao.daoPartida;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -11,16 +12,17 @@ import javax.swing.table.DefaultTableModel;
  * @author Carlos Rafaelano
  */
 public class BComprobacion extends javax.swing.JPanel {
-
+daoPartida pDAO = new daoPartida();
     /**
      * Creates new form BComprobacion
      */
     public BComprobacion() {
         initComponents();
         DefaultTableModel model;
-        String[] titulo = {"Codigo", "Cuenta", "Descripcion", "Debe", "Haber"};
+        String[] titulo = {"Codigo", "Cuenta", "Acreedor", "Deudor"};
         model = new DefaultTableModel(null, titulo);
         tblCombrobacion.setModel(model);
+        pDAO.listarComprobacion(tblCombrobacion);
     }
 
     /**
