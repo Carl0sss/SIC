@@ -73,6 +73,10 @@ public class Principal extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        btnEmpleado = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        btnPlanilla = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
         content = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -264,6 +268,48 @@ public class Principal extends javax.swing.JFrame {
         menu.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, 80, 30));
         menu.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, 170, 10));
 
+        btnEmpleado.setBackground(new java.awt.Color(62, 62, 62));
+        btnEmpleado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnEmpleadoMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnEmpleadoMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnEmpleadoMousePressed(evt);
+            }
+        });
+        btnEmpleado.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel8.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Ingresar Empleado");
+        btnEmpleado.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, -1, -1));
+
+        menu.add(btnEmpleado, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 480, 310, 60));
+
+        btnPlanilla.setBackground(new java.awt.Color(62, 62, 62));
+        btnPlanilla.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnPlanillaMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnPlanillaMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnPlanillaMousePressed(evt);
+            }
+        });
+        btnPlanilla.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel9.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Planilla");
+        btnPlanilla.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, -1, -1));
+
+        menu.add(btnPlanilla, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 540, 310, 60));
+
         background.add(menu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 310, 630));
 
         content.setBackground(new java.awt.Color(255, 255, 255));
@@ -303,7 +349,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnPrincipal1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPrincipal1MouseExited
         if (btnComprobación.getBackground().getRGB() != -12698050 || btnGeneral.getBackground().getRGB() != -12698050 || btnRegsitro.getBackground().getRGB() != -12698050
-                || btnLibroDiario.getBackground().getRGB() != -12698050 || btnLibroMayor.getBackground().getRGB() != -12698050)
+                || btnLibroDiario.getBackground().getRGB() != -12698050 || btnLibroMayor.getBackground().getRGB() != -12698050 || btnEmpleado.getBackground().getRGB() != -12698050 || btnPlanilla.getBackground().getRGB() != -12698050)
             resetColor(btnPrincipal1);
     }//GEN-LAST:event_btnPrincipal1MouseExited
 
@@ -314,7 +360,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnRegsitroMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegsitroMouseExited
         if (btnComprobación.getBackground().getRGB() != -12698050 || btnGeneral.getBackground().getRGB() != -12698050 || btnPrincipal1.getBackground().getRGB() != -12698050
-                || btnLibroDiario.getBackground().getRGB() != -12698050 || btnLibroMayor.getBackground().getRGB() != -12698050)
+                || btnLibroDiario.getBackground().getRGB() != -12698050 || btnLibroMayor.getBackground().getRGB() != -12698050 || btnEmpleado.getBackground().getRGB() != -12698050 || btnPlanilla.getBackground().getRGB() != -12698050)
             resetColor(btnRegsitro);
     }//GEN-LAST:event_btnRegsitroMouseExited
 
@@ -325,7 +371,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnLibroDiarioMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLibroDiarioMouseExited
         if (btnComprobación.getBackground().getRGB() != -12698050 || btnGeneral.getBackground().getRGB() != -12698050 || btnRegsitro.getBackground().getRGB() != -12698050
-                || btnPrincipal1.getBackground().getRGB() != -12698050 || btnLibroMayor.getBackground().getRGB() != -12698050)
+                || btnPrincipal1.getBackground().getRGB() != -12698050 || btnLibroMayor.getBackground().getRGB() != -12698050 || btnEmpleado.getBackground().getRGB() != -12698050 || btnPlanilla.getBackground().getRGB() != -12698050)
             resetColor(btnLibroDiario);
     }//GEN-LAST:event_btnLibroDiarioMouseExited
 
@@ -336,7 +382,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnLibroMayorMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLibroMayorMouseExited
         if (btnComprobación.getBackground().getRGB() != -12698050 || btnGeneral.getBackground().getRGB() != -12698050 || btnRegsitro.getBackground().getRGB() != -12698050
-                || btnLibroDiario.getBackground().getRGB() != -12698050 || btnPrincipal1.getBackground().getRGB() != -12698050)
+                || btnLibroDiario.getBackground().getRGB() != -12698050 || btnPrincipal1.getBackground().getRGB() != -12698050 || btnEmpleado.getBackground().getRGB() != -12698050 || btnPlanilla.getBackground().getRGB() != -12698050)
             resetColor(btnLibroMayor);
     }//GEN-LAST:event_btnLibroMayorMouseExited
 
@@ -347,7 +393,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnComprobaciónMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnComprobaciónMouseExited
         if (btnPrincipal1.getBackground().getRGB() != -12698050 || btnGeneral.getBackground().getRGB() != -12698050 || btnRegsitro.getBackground().getRGB() != -12698050
-                || btnLibroDiario.getBackground().getRGB() != -12698050 || btnLibroMayor.getBackground().getRGB() != -12698050)
+                || btnLibroDiario.getBackground().getRGB() != -12698050 || btnLibroMayor.getBackground().getRGB() != -12698050 || btnEmpleado.getBackground().getRGB() != -12698050 || btnPlanilla.getBackground().getRGB() != -12698050)
             resetColor(btnComprobación);
     }//GEN-LAST:event_btnComprobaciónMouseExited
 
@@ -358,7 +404,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnGeneralMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGeneralMouseExited
         if (btnComprobación.getBackground().getRGB() != -12698050 || btnPrincipal1.getBackground().getRGB() != -12698050 || btnRegsitro.getBackground().getRGB() != -12698050
-                || btnLibroDiario.getBackground().getRGB() != -12698050 || btnLibroMayor.getBackground().getRGB() != -12698050)
+                || btnLibroDiario.getBackground().getRGB() != -12698050 || btnLibroMayor.getBackground().getRGB() != -12698050 || btnEmpleado.getBackground().getRGB() != -12698050 || btnPlanilla.getBackground().getRGB() != -12698050)
             resetColor(btnGeneral);
     }//GEN-LAST:event_btnGeneralMouseExited
 
@@ -369,6 +415,8 @@ public class Principal extends javax.swing.JFrame {
         resetColor(btnGeneral);
         resetColor(btnLibroMayor);
         resetColor(btnLibroDiario);
+        resetColor(btnEmpleado);
+        resetColor(btnPlanilla);
         //Abrir vista
         Registro vs = new Registro();
         vs.setSize(780, 510);
@@ -386,6 +434,8 @@ public class Principal extends javax.swing.JFrame {
         resetColor(btnGeneral);
         resetColor(btnLibroMayor);
         resetColor(btnLibroDiario);
+        resetColor(btnEmpleado);
+        resetColor(btnPlanilla);
         //Abrir vista
         Dashboard vs = new Dashboard();
         vs.setSize(780, 510);
@@ -403,6 +453,8 @@ public class Principal extends javax.swing.JFrame {
         resetColor(btnGeneral);
         resetColor(btnLibroMayor);
         resetColor(btnPrincipal1);
+        resetColor(btnEmpleado);
+        resetColor(btnPlanilla);
         //Abrir vista
         Diario vs = new Diario();
         vs.setSize(780, 510);
@@ -420,6 +472,8 @@ public class Principal extends javax.swing.JFrame {
         resetColor(btnGeneral);
         resetColor(btnLibroDiario);
         resetColor(btnPrincipal1);
+        resetColor(btnEmpleado);
+        resetColor(btnPlanilla);
         //Abrir vista
         Mayor vs = new Mayor();
         vs.setSize(780, 510);
@@ -437,6 +491,8 @@ public class Principal extends javax.swing.JFrame {
         resetColor(btnGeneral);
         resetColor(btnLibroMayor);
         resetColor(btnPrincipal1);
+        resetColor(btnEmpleado);
+        resetColor(btnPlanilla);
         //Abrir vista
         BComprobacion vs = new BComprobacion();
         vs.setSize(780, 510);
@@ -454,6 +510,8 @@ public class Principal extends javax.swing.JFrame {
         resetColor(btnLibroDiario);
         resetColor(btnLibroMayor);
         resetColor(btnPrincipal1);
+        resetColor(btnEmpleado);
+        resetColor(btnPlanilla);
         //Abrir vista
         BGeneral vs = new BGeneral();
         vs.setSize(780, 510);
@@ -463,6 +521,66 @@ public class Principal extends javax.swing.JFrame {
         content.revalidate();
         content.repaint();
     }//GEN-LAST:event_btnGeneralMousePressed
+
+    private void btnEmpleadoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEmpleadoMouseEntered
+        if (btnEmpleado.getBackground().getRGB() == -12698050)
+            setColor(btnEmpleado);
+    }//GEN-LAST:event_btnEmpleadoMouseEntered
+
+    private void btnEmpleadoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEmpleadoMouseExited
+        if (btnComprobación.getBackground().getRGB() != -12698050 || btnGeneral.getBackground().getRGB() != -12698050 || btnRegsitro.getBackground().getRGB() != -12698050
+                || btnLibroDiario.getBackground().getRGB() != -12698050 || btnLibroMayor.getBackground().getRGB() != -12698050 || btnPrincipal1.getBackground().getRGB() != -12698050 || btnPlanilla.getBackground().getRGB() != -12698050)
+            resetColor(btnEmpleado);
+    }//GEN-LAST:event_btnEmpleadoMouseExited
+
+    private void btnEmpleadoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEmpleadoMousePressed
+        setColor(btnEmpleado);
+        resetColor(btnGeneral);
+        resetColor(btnRegsitro);
+        resetColor(btnComprobación);
+        resetColor(btnLibroDiario);
+        resetColor(btnLibroMayor);
+        resetColor(btnPrincipal1);
+        resetColor(btnPlanilla);
+        //Abrir vista
+        ElementosDeCostos vs = new ElementosDeCostos();
+        vs.setSize(780, 510);
+        vs.setLocation(0, 0);
+        content.removeAll();
+        content.add(vs, BorderLayout.CENTER);
+        content.revalidate();
+        content.repaint();
+    }//GEN-LAST:event_btnEmpleadoMousePressed
+
+    private void btnPlanillaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlanillaMouseEntered
+        if (btnPlanilla.getBackground().getRGB() == -12698050)
+            setColor(btnPlanilla);
+    }//GEN-LAST:event_btnPlanillaMouseEntered
+
+    private void btnPlanillaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlanillaMouseExited
+        if (btnComprobación.getBackground().getRGB() != -12698050 || btnGeneral.getBackground().getRGB() != -12698050 || btnRegsitro.getBackground().getRGB() != -12698050
+                || btnLibroDiario.getBackground().getRGB() != -12698050 || btnLibroMayor.getBackground().getRGB() != -12698050 || btnPrincipal1.getBackground().getRGB() != -12698050 || btnEmpleado.getBackground().getRGB() != -12698050)
+            resetColor(btnPlanilla);
+    }//GEN-LAST:event_btnPlanillaMouseExited
+
+    private void btnPlanillaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlanillaMousePressed
+        setColor(btnPlanilla);
+        resetColor(btnGeneral);
+        resetColor(btnRegsitro);
+        resetColor(btnComprobación);
+        resetColor(btnLibroDiario);
+        resetColor(btnLibroMayor);
+        resetColor(btnPrincipal1);
+        resetColor(btnEmpleado);
+        //Abrir vista
+        Costos vs = new Costos();
+        vs.setSize(780, 510);
+        vs.setLocation(0, 0);
+        content.removeAll();
+        content.add(vs, BorderLayout.CENTER);
+        content.revalidate();
+        content.repaint();
+    }//GEN-LAST:event_btnPlanillaMousePressed
 
     /**
      * @param args the command line arguments
@@ -515,9 +633,11 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel background;
     private javax.swing.JPanel barra;
     private javax.swing.JPanel btnComprobación;
+    private javax.swing.JPanel btnEmpleado;
     private javax.swing.JPanel btnGeneral;
     private javax.swing.JPanel btnLibroDiario;
     private javax.swing.JPanel btnLibroMayor;
+    private javax.swing.JPanel btnPlanilla;
     private javax.swing.JPanel btnPrincipal1;
     private javax.swing.JPanel btnRegsitro;
     private javax.swing.JPanel content;
@@ -530,6 +650,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel logo;
     private javax.swing.JPanel menu;

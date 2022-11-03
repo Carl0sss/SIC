@@ -185,4 +185,35 @@ public class daoPartida {
         }
         tabla.setModel(model);
     }
+
+    public void planilla(JTable tabla) {
+        DefaultTableModel model;
+        String[] titulo = {"Nombre empleado", "Salario hora", "Salario diario", "Salario Semanal", "Salario mensual", "ISSS", "AFP"};
+        model = new DefaultTableModel(null, titulo);
+        tabla.setModel(model);
+        EntityManager em = pdjc.getEntityManager();
+        Query query = em.createNativeQuery("SELECT\n"
+                + "	NOMBRE_EMPLEADO,\n"
+                + "	SALARIO_HORA,\n"
+                + "	( SALARIO_HORA * HORAS_TRABAJADAS ) AS \"Salario Diario\",\n"
+                + "	( HORAS_TRABAJADAS * SALARIO_HORA * 5 ) AS \"Salario Semanal\",\n"
+                + "	( HORAS_TRABAJADAS * SALARIO_HORA * DIAS_TRABAJADOS ) AS \"Total Salario\",\n"
+                + "	( ( HORAS_TRABAJADAS * SALARIO_HORA * DIAS_TRABAJADOS ) * 0.0775 ) AS \"ISSS\",\n"
+                + "	( ( HORAS_TRABAJADAS * SALARIO_HORA * DIAS_TRABAJADOS ) * 0.075 ) AS \"AFP\" \n"
+                + "FROM\n"
+                + "	planilla");
+        List<Object[]> datos = query.getResultList();
+        String[] datosTabla = new String[7];
+        for (Object[] dato : datos) {
+            datosTabla[0] = dato[0].toString();
+            datosTabla[1] = dato[1].toString();
+            datosTabla[2] = dato[2].toString();
+            datosTabla[3] = dato[3].toString();
+            datosTabla[4] = dato[4].toString();
+            datosTabla[5] = dato[5].toString();
+            datosTabla[6] = dato[6].toString();
+            model.addRow(datosTabla);
+        }
+        tabla.setModel(model);
+    }
 }

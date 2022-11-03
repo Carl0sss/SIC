@@ -33,11 +33,25 @@ public class inserts {
     //Insercion en la base de datos a traves de sentencias sql con una conexion auxiliar
     public void insertPartida(LocalDate fecha, String descripcion) {
         try {
-             
+
             Connection conexion = con.conectar();
             Statement st = conexion.createStatement();
             String sql = "INSERT INTO partida(fecha, descripcion)\n"
-                    + "VALUES ('"+fecha+"','"+descripcion+"');";
+                    + "VALUES ('" + fecha + "','" + descripcion + "');";
+            st.execute(sql);
+            st.close();
+        } catch (Exception e) {
+        }
+    }
+
+    public void insertPlanilla(String ocupacion, String nombre, double horas, double salario, int dias) {
+        try {
+
+            Connection conexion = con.conectar();
+            Statement st = conexion.createStatement();
+            String sql = "INSERT INTO planilla(\n"
+                    + "	nombre_empleado, ocupacion, horas_trabajadas, salario_hora, dias_trabajados)\n"
+                    + "	VALUES ('" + nombre + "','" + ocupacion + "' ," + horas + " ," + salario + " ," + dias + " );";
             st.execute(sql);
             st.close();
         } catch (Exception e) {
